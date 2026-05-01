@@ -4,12 +4,12 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 
-export const useLogin = () => {
+export const useSignIn = () => {
   const router = useRouter();
   const setUser = useAuthStore((state) => state.setUser);
   const supabase = createClient();
 
-  const login = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -24,5 +24,5 @@ export const useLogin = () => {
     return { error: null };
   };
 
-  return { login };
+  return { signIn };
 };
