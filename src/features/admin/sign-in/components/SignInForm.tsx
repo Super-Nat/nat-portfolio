@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSignIn } from "../hooks/useSignIn";
-import { signInSchema, SignInSchema } from "../types/sign-in";
+import { signInSchema, SignInSchema } from "../types/signInType";
 
 const SignInForm = () => {
   const form = useForm<SignInSchema>({
