@@ -15,10 +15,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSignIn } from "../hooks/useSignIn";
-import { signInSchema, TSignIn } from "../types/signInType";
+import { SignInReq, signInSchema } from "../types/signInType";
 
 const SignInForm = () => {
-  const form = useForm<TSignIn>({
+  const form = useForm<SignInReq>({
     defaultValues: {
       email: "",
       password: "",
@@ -28,7 +28,7 @@ const SignInForm = () => {
   const { handleSubmit } = form;
   const { signIn, isPending, error } = useSignIn();
 
-  const onSubmit = (data: TSignIn) => {
+  const onSubmit = (data: SignInReq) => {
     signIn(data);
   };
 
