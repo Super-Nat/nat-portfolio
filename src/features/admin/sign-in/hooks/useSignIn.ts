@@ -6,7 +6,7 @@ import { AuthError } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { TSignIn } from "../types/signInType";
+import { SignInReq } from "../types/signInType";
 
 type SignInError = AuthError | string | null;
 
@@ -16,7 +16,7 @@ export const useSignIn = () => {
   const [error, setError] = useState<SignInError>(null);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ email, password }: TSignIn) =>
+    mutationFn: ({ email, password }: SignInReq) =>
       signInService(email, password),
     onMutate: () => {
       setError(null);
@@ -25,7 +25,6 @@ export const useSignIn = () => {
       if (data.data) {
         setUser(data.data.user);
         router.push("/admin/dashboard");
-        setError(null);
       } else {
         setError(data.error);
       }

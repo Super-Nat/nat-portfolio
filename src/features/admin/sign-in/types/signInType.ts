@@ -5,4 +5,4 @@ export const signInSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export type TSignIn = z.infer<typeof signInSchema>;
+export type SignInReq = z.infer<typeof signInSchema>;
