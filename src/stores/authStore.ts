@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type Role = "admin" | "viewer";
 
@@ -10,13 +11,20 @@ interface AuthState {
   clearUser: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  role: null,
-  setUser: (user) =>
-    set({
-      user,
-      role: (user?.app_metadata?.role as Role) ?? null,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      role: null,
+      setUser: (user) =>
+        set({
+          user,
+          role: (user?.app_metadata?.role as Role) ?? null,
+        }),
+      clearUser: () => set({ user: null, role: null }),
     }),
-  clearUser: () => set({ user: null, role: null }),
-}));
+    {
+      name: "auth-storage",
+    },
+  ),
+);
