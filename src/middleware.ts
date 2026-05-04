@@ -31,9 +31,6 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log("session", session);
-  console.log("pathname", request.nextUrl.pathname);
-
   // Protect /admin routes
   if (!session && request.nextUrl.pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
