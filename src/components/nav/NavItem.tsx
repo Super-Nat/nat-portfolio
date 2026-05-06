@@ -1,18 +1,24 @@
-import { navItems } from "@/config/ navConfig";
+import { NavItemType } from "@/types/nav";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
-const NavItem = ({ item }: { item: (typeof navItems)[number] }) => {
+interface NavItemProps {
+  item: NavItemType["items"][number];
+}
+
+const NavItem = ({ item }: NavItemProps) => {
+  const pathname = usePathname();
+  const isActive = pathname === item.href;
+
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton>
-        <Link
-          href={item.href}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <item.icon className="size-4" />
-          <span>{item.title}</span>
-        </Link>
+      <SidebarMenuButton
+        isActive={isActive}
+        render={<Link href={item.href} className="flex items-center gap-2" />}
+      >
+        <item.icon className="size-4" />
+        <span>{item.title}</span>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );

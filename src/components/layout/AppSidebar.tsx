@@ -1,5 +1,6 @@
-import { navItems } from "@/config/ navConfig";
-import NavMain from "../nav/NavMain";
+import { navDashboard, navItems } from "@/config/ navConfig";
+import NavHeader from "../nav/NavHeader";
+import NavSection from "../nav/NavSection";
 import NavUser from "../nav/NavUser";
 import {
   Sidebar,
@@ -12,10 +13,18 @@ import {
 
 const AppSidebar = (props: React.ComponentProps<typeof Sidebar>) => {
   return (
-    <Sidebar collapsible="icon" {...props} variant="sidebar">
-      <SidebarHeader>{/* <TeamSwitcher teams={data.teams} /> */}</SidebarHeader>
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      variant="sidebar"
+      className="overflow-hidden"
+    >
+      <SidebarHeader>
+        <NavHeader />
+      </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navItems} />
+        <NavSection items={navDashboard} />
+        <NavSection items={navItems} />
       </SidebarContent>
       <SidebarSeparator />
       <SidebarFooter>
