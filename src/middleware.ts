@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -33,12 +33,16 @@ export async function middleware(request: NextRequest) {
 
   // Protect /admin routes
   if (!session && request.nextUrl.pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
+  if (session && request.nextUrl.pathname.startsWith("/sign-in")) {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
   return supabaseResponse;
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/sign-in"],
 };
