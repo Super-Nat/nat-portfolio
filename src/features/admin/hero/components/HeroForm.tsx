@@ -11,15 +11,18 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import useContent from "@/hooks/useContent";
+import { HeroReq, heroSchema } from "@/types/hero";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useHero } from "../hooks/useHero";
-import { heroSchema, type HeroReq } from "../types/heroType";
 
 const HeroForm = () => {
-  const { hero, isLoading, updateHero, isPending } = useHero();
+  const { content, isLoading, updateContent, isPending } = useContent({
+    key: "hero",
+    table: "hero",
+  });
 
   const form = useForm<HeroReq>({
     defaultValues: {
@@ -31,17 +34,17 @@ const HeroForm = () => {
 
   // prefill form เมื่อมีข้อมูลครับ
   useEffect(() => {
-    if (hero) {
+    if (content) {
       form.reset({
-        greeting: hero.greeting,
-        position: hero.position,
+        greeting: content.greeting,
+        position: content.position,
       });
     }
-  }, [hero, form]);
+  }, [content, form]);
 
   const onSubmit = (data: HeroReq) => {
-    if (!hero?.id) return;
-    updateHero({ id: hero.id, data });
+    if (!content?.id) return;
+    updateContent({ id: content.id, data, table: "hero" });
   };
 
   if (isLoading) return <Loader2 className="animate-spin" />;
