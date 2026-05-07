@@ -17,7 +17,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, UploadIcon, X } from "lucide-react";
+import { FileIcon, Loader2, UploadIcon, X } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import useAboutForm from "../hooks/useAboutForm";
 
@@ -34,6 +34,8 @@ const AboutForm = () => {
     isLoading,
     onSubmit,
     cvUrl,
+    content,
+    cvFile,
   } = useAboutForm();
 
   if (isLoading) return <Loader2 className="animate-spin" />;
@@ -107,18 +109,21 @@ const AboutForm = () => {
             <FieldLabel>CV</FieldLabel>
             <FieldContent>
               {cvUrl && (
-                <div className="flex items-center gap-2 mb-2 bg-input/50 rounded-sm border border-border p-2">
+                <div className="flex items-center gap-2 mb-2 relative w-25">
                   <a
                     href={cvUrl}
                     target="_blank"
-                    className="text-sm text-muted-foreground  rounded-sm"
+                    className="text-sm text-muted-foreground rounded-sm w-full"
                   >
-                    View current CV
+                    <FileIcon className="w-25 h-25" />
+                    <p className="mt-2 w-full text-xs text-muted-foreground text-ellipsis overflow-hidden whitespace-nowrap ">
+                      {content?.cv_url || cvFile?.name}
+                    </p>
                   </a>
                   <button
                     type="button"
                     onClick={handleRemoveCv}
-                    className="text-destructive rounded-full p-0.5 bg-destructive text-white"
+                    className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-0.5"
                   >
                     <X className="w-3 h-3" />
                   </button>
