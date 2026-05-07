@@ -1,3 +1,5 @@
+import { Separator } from "@/components/ui/separator";
+
 const Content = ({
   children,
   title,
@@ -10,9 +12,10 @@ const Content = ({
   return (
     <div className="flex flex-col gap-6 p-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold">{title}</h1>
+        <h1 className="text-3xl font-bold">{title}</h1>
         <p className="text-muted-foreground">{description}</p>
       </div>
+      <Separator />
       {children}
     </div>
   );
