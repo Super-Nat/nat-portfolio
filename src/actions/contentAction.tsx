@@ -1,6 +1,6 @@
 "use server";
 
-import { requireAuth } from "@/lib/requireAuth";
+import { requireAuth } from "@/lib/auth/requireAuth";
 import { updateContentService } from "@/services/contentServerService";
 
 export const updateContentAction = async ({

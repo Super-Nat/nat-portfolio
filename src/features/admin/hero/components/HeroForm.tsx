@@ -81,16 +81,14 @@ const HeroForm = () => {
           </Field>
         </FieldGroup>
         <FieldSeparator />
-        <div className="flex justify-end ">
-          <Button
-            type="submit"
-            disabled={isPending}
-            onClick={form.handleSubmit(onSubmit)}
-            size="lg"
-          >
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={isPending}
+          onClick={form.handleSubmit(onSubmit)}
+          size="lg"
+        >
+          {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
+        </Button>
       </FieldSet>
     </FormProvider>
   );

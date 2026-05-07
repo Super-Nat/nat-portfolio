@@ -1,5 +1,5 @@
+import { updateContentAction } from "@/actions/contentAction";
 import { getContentService } from "@/services/contentClientService";
-import { updateContentService } from "@/services/contentServerService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -15,7 +15,7 @@ const useContent = ({ key, table }: UseContentProps) => {
     queryFn: () => getContentService({ table }),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: ({
       id,
       data,
@@ -24,7 +24,7 @@ const useContent = ({ key, table }: UseContentProps) => {
       id: string;
       data: Record<string, unknown>;
       table: string;
-    }) => updateContentService({ id, data, table }),
+    }) => updateContentAction({ id, data, table }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [key] });
       toast.success("Content updated successfully!");
@@ -37,7 +37,7 @@ const useContent = ({ key, table }: UseContentProps) => {
   return {
     content: data?.data,
     isLoading,
-    updateContent: mutate,
+    updateContent: mutateAsync,
     isPending,
   };
 };

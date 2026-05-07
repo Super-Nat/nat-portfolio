@@ -1,100 +1,157 @@
 "use client";
 
-import { updateContentAction } from "@/actions/contentAction";
-import {
-  Dropzone,
-  DropzoneContent,
-  DropzoneEmptyState,
-} from "@/components/ui/dropzone";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldContent,
   FieldError,
+  FieldGroup,
   FieldLabel,
+  FieldSeparator,
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import useContent from "@/hooks/useContent";
-import { AboutReq, aboutSchema } from "@/types/about";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import { FormProvider, useForm } from "react-hook-form";
+import { Loader2, UploadIcon, X } from "lucide-react";
+import { FormProvider } from "react-hook-form";
+import useAboutForm from "../hooks/useAboutForm";
 
 const AboutForm = () => {
-  const { content, isLoading, updateContent, isPending } = useContent({
-    key: "about",
-    table: "about",
-  });
-  const form = useForm<AboutReq>({
-    defaultValues: {
-      name: "",
-      bio: "",
-      image_url: "",
-      cv_url: "",
-    },
-    resolver: zodResolver(aboutSchema),
-  });
+  const {
+    form,
+    handleImageChange,
+    handleRemoveImage,
+    handleCvChange,
+    handleRemoveCv,
+    imagePreview,
+    isUploading,
+    isPending,
+    isLoading,
+    onSubmit,
+    cvUrl,
+  } = useAboutForm();
 
-  const onSubmit = (data: AboutReq) => {
-    if (!content?.id) return;
-    updateContentAction({ id: content.id, data, table: "about" });
-  };
+  if (isLoading) return <Loader2 className="animate-spin" />;
 
   return (
     <FormProvider {...form}>
       <FieldSet className="w-full max-w-md">
-        <Field>
-          <FieldLabel>Name</FieldLabel>
-          <FieldContent>
-            <Input
-              placeholder="John Doe"
-              {...form.register("name")}
-              aria-invalid={!!form.formState.errors.name?.message}
-            />
-            <FieldError
-              errors={[{ message: form.formState.errors.name?.message }]}
-            />
-          </FieldContent>
-        </Field>
-        <Field>
-          <FieldLabel>Bio</FieldLabel>
-          <FieldContent>
-            <Textarea
-              placeholder="I am a software engineer"
-              {...form.register("bio")}
-              aria-invalid={!!form.formState.errors.bio?.message}
-            />
-            <FieldError
-              errors={[{ message: form.formState.errors.bio?.message }]}
-            />
-          </FieldContent>
-        </Field>
-        <Field>
-          <FieldLabel>Image</FieldLabel>
-          <FieldContent>
-            <Dropzone
-              onDrop={(acceptedFiles) => {
-                form.setValue("image_url", acceptedFiles[0].name);
-              }}
-              accept={{ "image/*": [".png", ".jpg", ".jpeg", ".gif"] }}
-              maxSize={5 * 1024 * 1024}
-            >
-              <DropzoneContent>
-                <Image
-                  src={form.getValues("image_url")}
-                  alt="Image"
-                  width={100}
-                  height={100}
-                />
-              </DropzoneContent>
-              <DropzoneEmptyState />
-            </Dropzone>
-            <FieldError
-              errors={[{ message: form.formState.errors.image_url?.message }]}
-            />
-          </FieldContent>
-        </Field>
+        <FieldGroup>
+          <Field>
+            <FieldLabel>Name</FieldLabel>
+            <FieldContent>
+              <Input
+                placeholder="NATCHAPON"
+                {...form.register("name")}
+                aria-invalid={!!form.formState.errors.name?.message}
+              />
+              <FieldError
+                errors={[{ message: form.formState.errors.name?.message }]}
+              />
+            </FieldContent>
+          </Field>
+          <Field>
+            <FieldLabel>Bio</FieldLabel>
+            <FieldContent>
+              <Textarea
+                placeholder="Hello! I'm a front-end developer..."
+                rows={4}
+                {...form.register("bio")}
+                aria-invalid={!!form.formState.errors.bio?.message}
+              />
+              <FieldError
+                errors={[{ message: form.formState.errors.bio?.message }]}
+              />
+            </FieldContent>
+          </Field>
+          <Field>
+            <FieldLabel>Profile Image</FieldLabel>
+            <FieldContent>
+              {imagePreview && (
+                <div className="relative w-24 h-24 mb-2">
+                  <img
+                    src={imagePreview}
+                    alt="Profile preview"
+                    className="w-24 h-24 rounded-lg object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute -top-2 -right-2 bg-destructive text-white rounded-full p-0.5"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              {!imagePreview && (
+                <InputGroup>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    disabled={isUploading}
+                  />
+                  <InputGroupAddon align="inline-start">
+                    <UploadIcon className="text-muted-foreground" />
+                  </InputGroupAddon>
+                </InputGroup>
+              )}
+            </FieldContent>
+          </Field>
+          <Field>
+            <FieldLabel>CV</FieldLabel>
+            <FieldContent>
+              {cvUrl && (
+                <div className="flex items-center gap-2 mb-2 bg-input/50 rounded-sm border border-border p-2">
+                  <a
+                    href={cvUrl}
+                    target="_blank"
+                    className="text-sm text-muted-foreground  rounded-sm"
+                  >
+                    View current CV
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleRemoveCv}
+                    className="text-destructive rounded-full p-0.5 bg-destructive text-white"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              {!cvUrl && (
+                <InputGroup>
+                  <InputGroupInput
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleCvChange}
+                    disabled={isUploading}
+                  />
+                  <InputGroupAddon align="inline-start">
+                    <UploadIcon className="text-muted-foreground" />
+                  </InputGroupAddon>
+                </InputGroup>
+              )}
+            </FieldContent>
+          </Field>
+        </FieldGroup>
+        <FieldSeparator />
+        <Button
+          type="submit"
+          disabled={isPending || isUploading}
+          onClick={form.handleSubmit(onSubmit)}
+        >
+          {isPending || isUploading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            "Save"
+          )}
+        </Button>
       </FieldSet>
     </FormProvider>
   );

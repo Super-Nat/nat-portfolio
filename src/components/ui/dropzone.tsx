@@ -64,7 +64,11 @@ export const Dropzone = ({
     minSize,
     onError,
     disabled,
-    onDrop: (acceptedFiles, fileRejections, event) => {
+    onDrop: (
+      acceptedFiles: File[],
+      fileRejections: FileRejection[],
+      event: DropEvent,
+    ) => {
       if (fileRejections.length > 0) {
         const message = fileRejections.at(0)?.errors.at(0)?.message;
         onError?.(new Error(message));
