@@ -11,41 +11,12 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import useContent from "@/hooks/useContent";
-import { HeroReq, heroSchema } from "@/types/hero";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
+import useHeroForm from "../hooks/useHeroForm";
 
 const HeroForm = () => {
-  const { content, isLoading, updateContent, isPending } = useContent({
-    key: "hero",
-    table: "hero",
-  });
-
-  const form = useForm<HeroReq>({
-    defaultValues: {
-      greeting: "",
-      position: "",
-    },
-    resolver: zodResolver(heroSchema),
-  });
-
-  // prefill form เมื่อมีข้อมูลครับ
-  useEffect(() => {
-    if (content) {
-      form.reset({
-        greeting: content.greeting,
-        position: content.position,
-      });
-    }
-  }, [content, form]);
-
-  const onSubmit = (data: HeroReq) => {
-    if (!content?.id) return;
-    updateContent({ id: content.id, data, table: "hero" });
-  };
+  const { form, handleSubmit, isPending, isLoading } = useHeroForm();
 
   if (isLoading) return <Loader2 className="animate-spin" />;
 
@@ -84,7 +55,7 @@ const HeroForm = () => {
         <Button
           type="submit"
           disabled={isPending}
-          onClick={form.handleSubmit(onSubmit)}
+          onClick={form.handleSubmit(handleSubmit)}
           size="lg"
         >
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
