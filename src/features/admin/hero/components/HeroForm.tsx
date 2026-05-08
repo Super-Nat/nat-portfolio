@@ -11,14 +11,13 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import useHeroForm from "../hooks/useHeroForm";
 
 const HeroForm = () => {
   const { form, handleSubmit, isPending, isLoading } = useHeroForm();
-
-  if (isLoading) return <Loader2 className="animate-spin" />;
 
   return (
     <FormProvider {...form}>
@@ -27,11 +26,15 @@ const HeroForm = () => {
           <Field>
             <FieldLabel>Greeting</FieldLabel>
             <FieldContent>
-              <Input
-                placeholder="HELLO! I AM NAT!"
-                {...form.register("greeting")}
-                aria-invalid={!!form.formState.errors.greeting?.message}
-              />
+              {isLoading ? (
+                <Skeleton className="w-full h-10 rounded-md" />
+              ) : (
+                <Input
+                  placeholder="HELLO! I AM NAT!"
+                  {...form.register("greeting")}
+                  aria-invalid={!!form.formState.errors.greeting?.message}
+                />
+              )}
               <FieldError
                 errors={[{ message: form.formState.errors.greeting?.message }]}
               />
@@ -40,11 +43,15 @@ const HeroForm = () => {
           <Field>
             <FieldLabel>Position</FieldLabel>
             <FieldContent>
-              <Input
-                placeholder="FRONT-END DEVELOPER"
-                {...form.register("position")}
-                aria-invalid={!!form.formState.errors.position?.message}
-              />
+              {isLoading ? (
+                <Skeleton className="w-full h-10 rounded-md" />
+              ) : (
+                <Input
+                  placeholder="FRONT-END DEVELOPER"
+                  {...form.register("position")}
+                  aria-invalid={!!form.formState.errors.position?.message}
+                />
+              )}
               <FieldError
                 errors={[{ message: form.formState.errors.position?.message }]}
               />
