@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -16,8 +14,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { FileIcon, Loader2, UploadIcon, X } from "lucide-react";
+import Image from "next/image";
 import { FormProvider } from "react-hook-form";
 import useAboutForm from "../hooks/useAboutForm";
 
@@ -38,8 +38,6 @@ const AboutForm = () => {
     cvFile,
   } = useAboutForm();
 
-  if (isLoading) return <Loader2 className="animate-spin" />;
-
   return (
     <FormProvider {...form}>
       <FieldSet className="w-full max-w-md">
@@ -47,11 +45,15 @@ const AboutForm = () => {
           <Field>
             <FieldLabel>Name</FieldLabel>
             <FieldContent>
-              <Input
-                placeholder="NATCHAPON"
-                {...form.register("name")}
-                aria-invalid={!!form.formState.errors.name?.message}
-              />
+              {isLoading ? (
+                <Skeleton className="w-full h-10 rounded-md" />
+              ) : (
+                <Input
+                  placeholder="NATCHAPON"
+                  {...form.register("name")}
+                  aria-invalid={!!form.formState.errors.name?.message}
+                />
+              )}
               <FieldError
                 errors={[{ message: form.formState.errors.name?.message }]}
               />
@@ -60,12 +62,16 @@ const AboutForm = () => {
           <Field>
             <FieldLabel>Bio</FieldLabel>
             <FieldContent>
-              <Textarea
-                placeholder="Hello! I'm a front-end developer..."
-                rows={4}
-                {...form.register("bio")}
-                aria-invalid={!!form.formState.errors.bio?.message}
-              />
+              {isLoading ? (
+                <Skeleton className="w-full h-24 rounded-md" />
+              ) : (
+                <Textarea
+                  placeholder="Hello! I'm a front-end developer..."
+                  rows={4}
+                  {...form.register("bio")}
+                  aria-invalid={!!form.formState.errors.bio?.message}
+                />
+              )}
               <FieldError
                 errors={[{ message: form.formState.errors.bio?.message }]}
               />
@@ -76,10 +82,13 @@ const AboutForm = () => {
             <FieldContent>
               {imagePreview && (
                 <div className="relative w-24 h-24 mb-2">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Profile preview"
                     className="w-24 h-24 rounded-lg object-cover"
+                    width={96}
+                    height={96}
+                    loading="lazy"
                   />
                   <button
                     type="button"

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -14,48 +12,61 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
-import useHeroForm from "../hooks/useHeroForm";
+import useContactForm from "../hooks/useContactForm";
 
-const HeroForm = () => {
-  const { form, handleSubmit, isPending, isLoading } = useHeroForm();
-
+const ContactForm = () => {
+  const { form, handleSubmit, isPending, isLoading } = useContactForm();
   return (
     <FormProvider {...form}>
       <FieldSet className="w-full max-w-md">
         <FieldGroup>
           <Field>
-            <FieldLabel>Greeting</FieldLabel>
+            <FieldLabel>Email</FieldLabel>
             <FieldContent>
               {isLoading ? (
                 <Skeleton className="w-full h-10 rounded-md" />
               ) : (
                 <Input
-                  placeholder="HELLO! I AM NAT!"
-                  {...form.register("greeting")}
-                  aria-invalid={!!form.formState.errors.greeting?.message}
+                  {...form.register("email")}
+                  aria-invalid={!!form.formState.errors.email?.message}
                 />
               )}
               <FieldError
-                errors={[{ message: form.formState.errors.greeting?.message }]}
+                errors={[{ message: form.formState.errors.email?.message }]}
               />
             </FieldContent>
           </Field>
           <Field>
-            <FieldLabel>Position</FieldLabel>
+            <FieldLabel>GitHub</FieldLabel>
             <FieldContent>
               {isLoading ? (
                 <Skeleton className="w-full h-10 rounded-md" />
               ) : (
                 <Input
-                  placeholder="FRONT-END DEVELOPER"
-                  {...form.register("position")}
-                  aria-invalid={!!form.formState.errors.position?.message}
+                  {...form.register("github")}
+                  aria-invalid={!!form.formState.errors.github?.message}
                 />
               )}
-              <FieldError
-                errors={[{ message: form.formState.errors.position?.message }]}
-              />
             </FieldContent>
+            <FieldError
+              errors={[{ message: form.formState.errors.github?.message }]}
+            />
+          </Field>
+          <Field>
+            <FieldLabel>LinkedIn</FieldLabel>
+            <FieldContent>
+              {isLoading ? (
+                <Skeleton className="w-full h-10 rounded-md" />
+              ) : (
+                <Input
+                  {...form.register("linkedin")}
+                  aria-invalid={!!form.formState.errors.linkedin?.message}
+                />
+              )}
+            </FieldContent>
+            <FieldError
+              errors={[{ message: form.formState.errors.linkedin?.message }]}
+            />
           </Field>
         </FieldGroup>
         <FieldSeparator />
@@ -63,7 +74,6 @@ const HeroForm = () => {
           type="submit"
           disabled={isPending}
           onClick={form.handleSubmit(handleSubmit)}
-          size="lg"
         >
           {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
         </Button>
@@ -72,4 +82,4 @@ const HeroForm = () => {
   );
 };
 
-export default HeroForm;
+export default ContactForm;
