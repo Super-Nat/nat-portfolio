@@ -1,5 +1,7 @@
+import ProjectsFeature from "@/features/admin/projects/ProjectsFeature";
+
 const ProjectsPage = () => {
-  return <div>ProjectsPage</div>;
+  return <ProjectsFeature />;
 };
 
 export default ProjectsPage;
