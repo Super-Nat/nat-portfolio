@@ -9,12 +9,10 @@ export async function GET(request: Request) {
 
   try {
     const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     );
 
-    // ใช้ .upsert เพื่ออัปเดตแถวเดิม (id: 1) เสมอ
-    // วิธีนี้จะสร้าง Activity จริง แต่ Table จะมีแค่ 1 row ตลอดไป
     const { error } = await supabase
       .from("keep_alive")
       .upsert({ id: 1, created_at: new Date() });

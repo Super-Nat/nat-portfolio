@@ -27,13 +27,13 @@ const Header = () => {
         <Breadcrumb>
           <BreadcrumbList>
             {breadcrumbLinks.map((link, index) => (
-              <div key={index}>
+              <div key={index} className="flex items-center gap-2">
+                {index <= breadcrumbLinks.length - 1 && index !== 0 && (
+                  <BreadcrumbSeparator />
+                )}
                 <BreadcrumbItem>
                   <BreadcrumbLink href={link.href}>{link.label}</BreadcrumbLink>
                 </BreadcrumbItem>
-                {index < breadcrumbLinks.length - 1 && index !== 0 && (
-                  <BreadcrumbSeparator className="hidden md:block" />
-                )}
               </div>
             ))}
           </BreadcrumbList>

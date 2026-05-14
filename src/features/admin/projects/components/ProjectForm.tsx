@@ -15,6 +15,7 @@ import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import { useProjectForm } from "../hooks/useProjectForm";
 import { ProjectCallbacks, ProjectReq } from "../types/projectsType";
+import { ProjectTechStackInput } from "./ProjectTechStackInput";
 
 interface ProjectFormProps extends ProjectCallbacks {
   mode: "create" | "update";
@@ -110,7 +111,7 @@ const ProjectForm = ({
           <Field>
             <FieldLabel>Tech Stack</FieldLabel>
             <FieldContent>
-              <Input
+              {/* <Input
                 placeholder="React, TypeScript, Next.js"
                 value={form.watch("tech_stack")?.join(", ") ?? ""}
                 onChange={(e) => {
@@ -122,7 +123,8 @@ const ProjectForm = ({
                       .filter(Boolean),
                   );
                 }}
-              />
+              /> */}
+              <ProjectTechStackInput />
             </FieldContent>
           </Field>
           <Field>
