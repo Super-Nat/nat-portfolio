@@ -23,6 +23,7 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
   const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: ["projects"],
+
     queryFn: () => getProjectsService({ table: "projects" }),
     enabled: fetchList && !id,
   });

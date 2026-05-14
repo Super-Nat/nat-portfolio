@@ -11,7 +11,10 @@ interface CollectionItemServiceProps {
 
 export const getProjectsService = async ({ table }: CollectionServiceProps) => {
   const supabase = createClient();
-  const { data, error } = await supabase.from(table).select("*");
+  const { data, error } = await supabase
+    .from(table)
+    .select("*")
+    .order("updated_at", { ascending: false });
 
   if (error) return { data: null, error };
   return { data, error: null };

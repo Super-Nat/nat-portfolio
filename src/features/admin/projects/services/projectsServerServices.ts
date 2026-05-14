@@ -14,6 +14,7 @@ export const updateProjectService = async ({
   data,
   table,
 }: UpdateProps) => {
+  console.log(data);
   const supabase = await createClient();
   const { data: updatedData, error } = await supabase
     .from(table)

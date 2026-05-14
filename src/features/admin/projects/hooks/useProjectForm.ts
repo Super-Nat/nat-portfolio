@@ -33,13 +33,18 @@ export const useProjectForm = ({
   useEffect(() => {
     if (item) {
       form.reset(item as unknown as ProjectReq);
-      console.log(item);
     }
   }, [item, form]);
 
   const handleSubmit = (data: ProjectReq) => {
     if (item?.id) {
-      updateProject({ id: item.id as string, data });
+      updateProject({
+        id: item.id as string,
+        data: {
+          ...data,
+          updated_at: new Date().toISOString(),
+        },
+      });
     } else {
       createProject(data);
     }

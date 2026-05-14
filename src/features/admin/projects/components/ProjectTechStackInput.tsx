@@ -20,8 +20,6 @@ export function ProjectTechStackInput() {
   const { watch, setValue } = useFormContext();
   const value = watch("tech_stack");
 
-  console.log(value);
-
   return (
     <Combobox
       items={frameworks}
