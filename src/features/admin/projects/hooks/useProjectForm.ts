@@ -33,6 +33,7 @@ export const useProjectForm = ({
   useEffect(() => {
     if (item) {
       form.reset(item as unknown as ProjectReq);
+      console.log(item);
     }
   }, [item, form]);
 

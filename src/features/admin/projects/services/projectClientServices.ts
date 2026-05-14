@@ -11,12 +11,8 @@ interface CollectionItemServiceProps {
 
 export const getProjectsService = async ({ table }: CollectionServiceProps) => {
   const supabase = createClient();
-  const { data, error } = await supabase.from(table).select(`
-      *,
-      tech_stack:project_tech_stack(
-        tech_stack(*)
-      )
-    `);
+  const { data, error } = await supabase.from(table).select("*");
+
   if (error) return { data: null, error };
   return { data, error: null };
 };
@@ -28,14 +24,7 @@ export const getProjectItemService = async ({
   const supabase = createClient();
   const { data, error } = await supabase
     .from(table)
-    .select(
-      `
-      *,
-      tech_stack:project_tech_stack(
-        tech_stack(*)
-      )
-    `,
-    )
+    .select("*")
     .eq("id", id)
     .single();
   if (error) return { data: null, error };
