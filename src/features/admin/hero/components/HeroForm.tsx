@@ -11,6 +11,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import Loading from "@/components/ui/loading";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
@@ -18,6 +19,10 @@ import useHeroForm from "../hooks/useHeroForm";
 
 const HeroForm = () => {
   const { form, handleSubmit, isPending, isLoading } = useHeroForm();
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <FormProvider {...form}>

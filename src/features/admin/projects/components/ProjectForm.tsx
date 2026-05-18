@@ -11,21 +11,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import UploadFile from "@/components/ui/upload-file";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import { useProjectForm } from "../hooks/useProjectForm";
-import { ProjectCallbacks, ProjectReq } from "../types/projectsType";
+import { ProjectCallbacks, ProjectFormType } from "../types/projectsType";
 import { ProjectTechStackInput } from "./ProjectTechStackInput";
 
 interface ProjectFormProps extends ProjectCallbacks {
-  mode: "create" | "update";
-  item?: ProjectReq;
+  item?: ProjectFormType;
   isCreating: boolean;
   isUpdating: boolean;
 }
 
 const ProjectForm = ({
-  mode,
   item,
   updateProject,
   createProject,
@@ -71,9 +70,13 @@ const ProjectForm = ({
           <Field>
             <FieldLabel>Image URL</FieldLabel>
             <FieldContent>
-              <Input
-                {...form.register("image_url")}
-                aria-invalid={!!form.formState.errors.image_url?.message}
+              <UploadFile
+                fieldName="image_url"
+                accept="image/*"
+                maxSize={1024 * 1024 * 5}
+                previewHeight={128}
+                previewWidth={128}
+                previewClassName="w-24 h-24 rounded-lg object-cover"
               />
               <FieldError
                 errors={[{ message: form.formState.errors.image_url?.message }]}
@@ -111,19 +114,6 @@ const ProjectForm = ({
           <Field>
             <FieldLabel>Tech Stack</FieldLabel>
             <FieldContent>
-              {/* <Input
-                placeholder="React, TypeScript, Next.js"
-                value={form.watch("tech_stack")?.join(", ") ?? ""}
-                onChange={(e) => {
-                  form.setValue(
-                    "tech_stack",
-                    e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  );
-                }}
-              /> */}
               <ProjectTechStackInput />
             </FieldContent>
           </Field>

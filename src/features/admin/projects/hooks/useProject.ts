@@ -12,6 +12,7 @@ import {
   getProjectItemService,
   getProjectsService,
 } from "../services/projectClientServices";
+import { ProjectReq, UpdateProps } from "../types/projectsType";
 
 interface UseProjectProps {
   id?: string;
@@ -36,10 +37,9 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
   });
 
   const { mutateAsync: createProject, isPending: isCreating } = useMutation({
-    mutationFn: (data: Record<string, unknown>) =>
-      createProjectAction({ table: "projects", data }),
+    mutationFn: (data: ProjectReq) => createProjectAction(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", "project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Collection created successfully!");
       router.push(`/admin/projects`);
     },
@@ -47,10 +47,10 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
   });
 
   const { mutateAsync: updateProject, isPending: isUpdating } = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
-      updateProjectAction({ table: "projects", data, id: id }),
+    mutationFn: ({ id, data }: UpdateProps) =>
+      updateProjectAction({ data, id: id }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", "project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Collection updated successfully!");
       router.push(`/admin/projects`);
     },
@@ -58,9 +58,9 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
   });
 
   const { mutateAsync: deleteProject, isPending: isDeleting } = useMutation({
-    mutationFn: (id: string) => deleteProjectAction({ table: "projects", id }),
+    mutationFn: (id: string) => deleteProjectAction(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", "project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Collection deleted successfully!");
       router.push(`/admin/projects`);
     },

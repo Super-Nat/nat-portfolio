@@ -13,7 +13,14 @@ export const getProjectsService = async ({ table }: CollectionServiceProps) => {
   const supabase = createClient();
   const { data, error } = await supabase
     .from(table)
-    .select("*")
+    .select(
+      `
+      *,
+      project_tech_stack(
+        tech_stack(*)
+      )
+    `,
+    )
     .order("updated_at", { ascending: false });
 
   if (error) return { data: null, error };
@@ -27,9 +34,15 @@ export const getProjectItemService = async ({
   const supabase = createClient();
   const { data, error } = await supabase
     .from(table)
-    .select("*")
+    .select(
+      `
+      *,
+      tech_stack(id)
+    `,
+    )
     .eq("id", id)
     .single();
+
   if (error) return { data: null, error };
   return { data, error: null };
 };

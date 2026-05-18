@@ -1,30 +1,30 @@
 "use server";
 
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { CreateProps, DeleteProps, UpdateProps } from "@/types/collection";
 import {
   createProjectService,
   deleteProjectService,
   updateProjectService,
 } from "../services/projectsServerServices";
+import { ProjectReq, UpdateProps } from "../types/projectsType";
 
-export const createProjectAction = async ({ table, data }: CreateProps) => {
+export const createProjectAction = async (data: ProjectReq) => {
   await requireAuth();
-  const result = await createProjectService({ table, data });
+  const result = await createProjectService(data);
 
   return result;
 };
 
-export const updateProjectAction = async ({ id, data, table }: UpdateProps) => {
+export const updateProjectAction = async ({ id, data }: UpdateProps) => {
   await requireAuth();
-  const result = await updateProjectService({ id, data, table });
+  const result = await updateProjectService({ id, data });
 
   return result;
 };
 
-export const deleteProjectAction = async ({ id, table }: DeleteProps) => {
+export const deleteProjectAction = async (id: string) => {
   await requireAuth();
-  const result = await deleteProjectService({ id, table });
+  const result = await deleteProjectService(id);
 
   return result;
 };
