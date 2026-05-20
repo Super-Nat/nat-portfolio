@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/ui/data-table";
+import Loading from "@/components/ui/loading";
 import { useProject } from "../hooks/useProject";
 import { projectColumns } from "./ProjectsColumns";
 
@@ -11,7 +12,7 @@ const ProjectList = () => {
 
   const columns = projectColumns((id: string) => deleteProject(id));
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="flex flex-col gap-4">

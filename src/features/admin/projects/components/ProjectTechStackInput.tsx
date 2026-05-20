@@ -14,7 +14,7 @@ import { useFormContext } from "react-hook-form";
 import { useTechStack } from "../hooks/useTechStack";
 
 export function ProjectTechStackInput() {
-  const { techStack, isLoading } = useTechStack();
+  const { techStack } = useTechStack();
   const anchor = useComboboxAnchor();
   const { watch, setValue } = useFormContext();
   const value = watch("tech_stack");

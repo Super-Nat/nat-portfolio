@@ -5,13 +5,14 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   ProjectCallbacks,
-  ProjectFormType,
+  ProjectFormInput,
+  ProjectItem,
   ProjectReq,
   projectSchema,
 } from "../types/projectsType";
 
 interface UseProjectFormProps extends ProjectCallbacks {
-  item?: ProjectFormType;
+  item?: ProjectItem;
 }
 
 export const useProjectForm = ({
@@ -21,7 +22,7 @@ export const useProjectForm = ({
 }: UseProjectFormProps) => {
   const { upload, isUploading } = useUpload();
 
-  const form = useForm<ProjectReq>({
+  const form = useForm<ProjectFormInput, unknown, ProjectReq>({
     defaultValues: {
       title: "",
       description: "",
@@ -39,7 +40,7 @@ export const useProjectForm = ({
     if (item) {
       form.reset({
         ...item,
-        tech_stack: item.tech_stack?.map((tech) => tech.id),
+        tech_stack: item.tech_stack ?? [],
       });
     }
   }, [item, form]);
@@ -49,21 +50,31 @@ export const useProjectForm = ({
 
     if (data.image_url instanceof File) {
       if (item?.image_url) {
-        await deleteFileAction(item.image_url as string);
+        const { error: deleteFileError } = await deleteFileAction(
+          item.image_url as string,
+        );
+        if (deleteFileError) {
+          form.setError("image_url", { message: deleteFileError });
+          return;
+        }
       }
-      const { url } = await upload(data.image_url);
-      if (url) imageUrl = url;
+      const { key, error } = await upload(data.image_url, { profile: "image" });
+      if (error) {
+        form.setError("image_url", { message: error });
+        return;
+      }
+      if (key) imageUrl = key;
     }
 
     const payload = { ...data, image_url: imageUrl };
 
     if (item?.id) {
-      updateProject({
-        id: item.id as string,
+      await updateProject({
+        id: item.id,
         data: payload,
       });
     } else {
-      createProject(payload);
+      await createProject(payload);
     }
   };
 

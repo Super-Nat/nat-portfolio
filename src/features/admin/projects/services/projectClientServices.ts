@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
+import { TechStackType } from "@/types/techStack";
+import { ProjectTechStackRelation } from "../types/projectQueryTypes";
 
 interface CollectionServiceProps {
   table: string;
@@ -35,16 +37,29 @@ export const getProjectItemService = async ({
   const { data, error } = await supabase
     .from(table)
     .select(
-      `
-      *,
-      tech_stack(id)
+      `*,
+      project_tech_stack(
+        tech_stack(id)
+      )
     `,
     )
     .eq("id", id)
     .single();
 
   if (error) return { data: null, error };
-  return { data, error: null };
-};
 
-//server
+  const { project_tech_stack, ...projectData } = data;
+
+  const techStack = project_tech_stack
+    ?.map((tech: ProjectTechStackRelation) => tech.tech_stack)
+    .filter((tech: TechStackType | null) => tech !== null && tech.id !== null)
+    .map((tech: TechStackType) => tech.id!);
+
+  return {
+    data: {
+      ...projectData,
+      tech_stack: techStack,
+    },
+    error: null,
+  };
+};

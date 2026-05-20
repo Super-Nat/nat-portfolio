@@ -14,5 +14,10 @@ export const updateContentAction = async ({
 }) => {
   await requireAuth();
 
-  return await updateContentService({ id, data, table });
+  const result = await updateContentService({ id, data, table });
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result;
 };

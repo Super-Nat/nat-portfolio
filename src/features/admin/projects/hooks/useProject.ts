@@ -24,7 +24,6 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
   const router = useRouter();
   const { data, isLoading } = useQuery({
     queryKey: ["projects"],
-
     queryFn: () => getProjectsService({ table: "projects" }),
     enabled: fetchList && !id,
   });
@@ -40,10 +39,14 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
     mutationFn: (data: ProjectReq) => createProjectAction(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success("Collection created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+      toast.success("Project created successfully!");
       router.push(`/admin/projects`);
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   const { mutateAsync: updateProject, isPending: isUpdating } = useMutation({
@@ -51,20 +54,27 @@ export const useProject = ({ id, fetchList = true }: UseProjectProps) => {
       updateProjectAction({ data, id: id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success("Collection updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+      toast.success("Project updated successfully!");
       router.push(`/admin/projects`);
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   const { mutateAsync: deleteProject, isPending: isDeleting } = useMutation({
     mutationFn: (id: string) => deleteProjectAction(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success("Collection deleted successfully!");
+      toast.success("Project deleted successfully!");
       router.push(`/admin/projects`);
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   return {

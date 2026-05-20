@@ -4,22 +4,27 @@ import { ProjectReq, UpdateProps } from "../types/projectsType";
 
 export const createProjectService = async (data: ProjectReq) => {
   const supabase = await createClient();
-  const techStack = data?.tech_stack as string[];
+  const { tech_stack, ...projectData } = data;
+  const techStack = tech_stack as string[];
 
   const { data: createdData, error } = await supabase
     .from("projects")
-    .insert({ ...data, created_at: new Date().toISOString() })
+    .insert({ ...projectData, created_at: new Date().toISOString() })
     .select()
     .single();
   if (error) return { data: null, error };
 
   if (techStack !== undefined) {
-    await supabase.from("project_tech_stack").insert(
-      techStack.map((tech: string) => ({
-        project_id: createdData.id,
-        tech_stack_id: tech,
-      })),
-    );
+    const { error: projectTechStackError } = await supabase
+      .from("project_tech_stack")
+      .insert(
+        techStack.map((tech: string) => ({
+          project_id: createdData.id,
+          tech_stack_id: tech,
+        })),
+      );
+    if (projectTechStackError)
+      return { data: null, error: projectTechStackError };
   }
   return { data: createdData, error: null };
 };
@@ -36,15 +41,24 @@ export const updateProjectService = async ({ id, data }: UpdateProps) => {
   if (error) return { data: null, error };
 
   if (techStack !== undefined) {
-    await supabase.from("project_tech_stack").delete().eq("project_id", id);
+    const { error: projectTechStackError } = await supabase
+      .from("project_tech_stack")
+      .delete()
+      .eq("project_id", id);
+    if (projectTechStackError)
+      return { data: null, error: projectTechStackError };
 
     if (techStack?.length > 0) {
-      await supabase.from("project_tech_stack").insert(
-        techStack.map((tech: string) => ({
-          project_id: id,
-          tech_stack_id: tech,
-        })),
-      );
+      const { error: projectTechStackError } = await supabase
+        .from("project_tech_stack")
+        .insert(
+          techStack.map((tech: string) => ({
+            project_id: id,
+            tech_stack_id: tech,
+          })),
+        );
+      if (projectTechStackError)
+        return { data: null, error: projectTechStackError };
     }
   }
   return { data: updatedData, error: null };

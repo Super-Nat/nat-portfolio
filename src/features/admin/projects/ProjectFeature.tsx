@@ -21,7 +21,7 @@ const ProjectFeature = ({ id }: ProjectFeatureProps) => {
     fetchList: false,
   });
 
-  const title = id ? item?.title : "Create Project";
+  const title = id ? (item?.title ?? "Edit Project") : "Create Project";
   const description = id ? "Edit your project" : "Create a new project";
 
   return (
@@ -30,7 +30,7 @@ const ProjectFeature = ({ id }: ProjectFeatureProps) => {
         <Loading />
       ) : (
         <ProjectForm
-          item={item}
+          item={item ?? undefined}
           updateProject={updateProject}
           createProject={createProject}
           isCreating={isCreating}

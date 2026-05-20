@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Loading from "@/components/ui/loading";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import UploadFile from "@/components/ui/upload-file";
 import { Loader2 } from "lucide-react";
@@ -31,15 +30,11 @@ const AboutForm = () => {
           <Field>
             <FieldLabel>Name</FieldLabel>
             <FieldContent>
-              {isLoading ? (
-                <Skeleton className="w-full h-10 rounded-md" />
-              ) : (
-                <Input
-                  placeholder="NATCHAPON"
-                  {...form.register("name")}
-                  aria-invalid={!!form.formState.errors.name?.message}
-                />
-              )}
+              <Input
+                placeholder="NATCHAPON"
+                {...form.register("name")}
+                aria-invalid={!!form.formState.errors.name?.message}
+              />
               <FieldError
                 errors={[{ message: form.formState.errors.name?.message }]}
               />
@@ -48,16 +43,12 @@ const AboutForm = () => {
           <Field>
             <FieldLabel>Bio</FieldLabel>
             <FieldContent>
-              {isLoading ? (
-                <Skeleton className="w-full h-24 rounded-md" />
-              ) : (
-                <Textarea
-                  placeholder="Hello! I'm a front-end developer..."
-                  rows={4}
-                  {...form.register("bio")}
-                  aria-invalid={!!form.formState.errors.bio?.message}
-                />
-              )}
+              <Textarea
+                placeholder="Hello! I'm a front-end developer..."
+                rows={4}
+                {...form.register("bio")}
+                aria-invalid={!!form.formState.errors.bio?.message}
+              />
               <FieldError
                 errors={[{ message: form.formState.errors.bio?.message }]}
               />

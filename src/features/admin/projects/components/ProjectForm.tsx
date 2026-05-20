@@ -15,11 +15,11 @@ import UploadFile from "@/components/ui/upload-file";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import { useProjectForm } from "../hooks/useProjectForm";
-import { ProjectCallbacks, ProjectFormType } from "../types/projectsType";
+import { ProjectCallbacks, ProjectItem } from "../types/projectsType";
 import { ProjectTechStackInput } from "./ProjectTechStackInput";
 
 interface ProjectFormProps extends ProjectCallbacks {
-  item?: ProjectFormType;
+  item?: ProjectItem;
   isCreating: boolean;
   isUpdating: boolean;
 }
@@ -31,7 +31,7 @@ const ProjectForm = ({
   isCreating,
   isUpdating,
 }: ProjectFormProps) => {
-  const { form, onSubmit } = useProjectForm({
+  const { form, onSubmit, isUploading } = useProjectForm({
     item,
     updateProject,
     createProject,
@@ -78,9 +78,6 @@ const ProjectForm = ({
                 previewWidth={128}
                 previewClassName="w-24 h-24 rounded-lg object-cover"
               />
-              <FieldError
-                errors={[{ message: form.formState.errors.image_url?.message }]}
-              />
             </FieldContent>
           </Field>
           <Field>
@@ -121,11 +118,10 @@ const ProjectForm = ({
             <FieldLabel>Sort Order</FieldLabel>
             <FieldContent>
               <Input
-                {...form.register("sort_order")}
                 type="number"
-                onChange={(e) => {
-                  form.setValue("sort_order", parseInt(e.target.value));
-                }}
+                min={0}
+                step={1}
+                {...form.register("sort_order", { valueAsNumber: true })}
                 aria-invalid={!!form.formState.errors.sort_order?.message}
               />
               <FieldError
@@ -151,9 +147,9 @@ const ProjectForm = ({
         <Button
           type="submit"
           onClick={onSubmit}
-          disabled={isCreating || isUpdating}
+          disabled={isCreating || isUpdating || isUploading}
         >
-          {isCreating || isUpdating ? (
+          {isCreating || isUpdating || isUploading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             "Save"

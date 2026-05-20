@@ -46,7 +46,10 @@ export const useCollection = ({
       queryClient.invalidateQueries({ queryKey: [key] });
       toast.success("Collection created successfully!");
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   const { mutateAsync: updateCollection, isPending: isUpdating } = useMutation({
@@ -56,7 +59,10 @@ export const useCollection = ({
       queryClient.invalidateQueries({ queryKey: [key] });
       toast.success("Collection updated successfully!");
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   const { mutateAsync: deleteCollection, isPending: isDeleting } = useMutation({
@@ -65,7 +71,10 @@ export const useCollection = ({
       queryClient.invalidateQueries({ queryKey: [key] });
       toast.success("Collection deleted successfully!");
     },
-    onError: () => toast.error("Something went wrong!"),
+    onError: (error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      ),
   });
 
   return {
