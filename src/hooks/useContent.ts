@@ -29,8 +29,10 @@ const useContent = ({ key, table }: UseContentProps) => {
       queryClient.invalidateQueries({ queryKey: [key] });
       toast.success("Content updated successfully!");
     },
-    onError: () => {
-      toast.error("Something went wrong!");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Something went wrong!",
+      );
     },
   });
 

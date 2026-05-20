@@ -3,6 +3,7 @@ import { HeroReq, heroSchema } from "@/types/hero";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const useHeroForm = () => {
   const { content, isLoading, updateContent, isPending } = useContent({
@@ -27,9 +28,11 @@ const useHeroForm = () => {
     }
   }, [content, form]);
 
-  const handleSubmit = (data: HeroReq) => {
-    if (!content?.id) return;
-    updateContent({ id: content.id, data, table: "hero" });
+  const handleSubmit = async (data: HeroReq) => {
+    if (!content?.id) {
+      return toast.error("Content not found!");
+    }
+    await updateContent({ id: content.id, data, table: "hero" });
   };
 
   return {

@@ -11,28 +11,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import UploadFile from "@/components/ui/upload-file";
 import { Loader2 } from "lucide-react";
 import { FormProvider } from "react-hook-form";
 import { useProjectForm } from "../hooks/useProjectForm";
-import { ProjectCallbacks, ProjectReq } from "../types/projectsType";
+import { ProjectCallbacks, ProjectItem } from "../types/projectsType";
 import { ProjectTechStackInput } from "./ProjectTechStackInput";
 
 interface ProjectFormProps extends ProjectCallbacks {
-  mode: "create" | "update";
-  item?: ProjectReq;
+  item?: ProjectItem;
   isCreating: boolean;
   isUpdating: boolean;
 }
 
 const ProjectForm = ({
-  mode,
   item,
   updateProject,
   createProject,
   isCreating,
   isUpdating,
 }: ProjectFormProps) => {
-  const { form, onSubmit } = useProjectForm({
+  const { form, onSubmit, isUploading } = useProjectForm({
     item,
     updateProject,
     createProject,
@@ -71,12 +70,13 @@ const ProjectForm = ({
           <Field>
             <FieldLabel>Image URL</FieldLabel>
             <FieldContent>
-              <Input
-                {...form.register("image_url")}
-                aria-invalid={!!form.formState.errors.image_url?.message}
-              />
-              <FieldError
-                errors={[{ message: form.formState.errors.image_url?.message }]}
+              <UploadFile
+                fieldName="image_url"
+                accept="image/*"
+                maxSize={1024 * 1024 * 5}
+                previewHeight={128}
+                previewWidth={128}
+                previewClassName="w-24 h-24 rounded-lg object-cover"
               />
             </FieldContent>
           </Field>
@@ -111,19 +111,6 @@ const ProjectForm = ({
           <Field>
             <FieldLabel>Tech Stack</FieldLabel>
             <FieldContent>
-              {/* <Input
-                placeholder="React, TypeScript, Next.js"
-                value={form.watch("tech_stack")?.join(", ") ?? ""}
-                onChange={(e) => {
-                  form.setValue(
-                    "tech_stack",
-                    e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  );
-                }}
-              /> */}
               <ProjectTechStackInput />
             </FieldContent>
           </Field>
@@ -131,11 +118,10 @@ const ProjectForm = ({
             <FieldLabel>Sort Order</FieldLabel>
             <FieldContent>
               <Input
-                {...form.register("sort_order")}
                 type="number"
-                onChange={(e) => {
-                  form.setValue("sort_order", parseInt(e.target.value));
-                }}
+                min={0}
+                step={1}
+                {...form.register("sort_order", { valueAsNumber: true })}
                 aria-invalid={!!form.formState.errors.sort_order?.message}
               />
               <FieldError
@@ -161,9 +147,9 @@ const ProjectForm = ({
         <Button
           type="submit"
           onClick={onSubmit}
-          disabled={isCreating || isUpdating}
+          disabled={isCreating || isUpdating || isUploading}
         >
-          {isCreating || isUpdating ? (
+          {isCreating || isUpdating || isUploading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             "Save"

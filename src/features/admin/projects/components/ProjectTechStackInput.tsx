@@ -14,17 +14,18 @@ import { useFormContext } from "react-hook-form";
 import { useTechStack } from "../hooks/useTechStack";
 
 export function ProjectTechStackInput() {
-  const { techStack, isLoading } = useTechStack();
-  const frameworks = techStack?.map((tech) => tech.name) ?? [];
+  const { techStack } = useTechStack();
   const anchor = useComboboxAnchor();
   const { watch, setValue } = useFormContext();
   const value = watch("tech_stack");
-
-  console.log(value);
+  const techStackOptions = techStack?.map((tech) => ({
+    label: tech.name,
+    value: tech.id,
+  }));
 
   return (
     <Combobox
-      items={frameworks}
+      items={techStackOptions}
       multiple
       autoHighlight
       value={value}
@@ -34,8 +35,10 @@ export function ProjectTechStackInput() {
     >
       <ComboboxChips ref={anchor} className="w-full ">
         <ComboboxValue>
-          {value.map((item: string) => (
-            <ComboboxChip key={item}>{item}</ComboboxChip>
+          {value?.map((item: string) => (
+            <ComboboxChip key={item}>
+              {techStack?.find((tech) => tech.id === item)?.name}
+            </ComboboxChip>
           ))}
         </ComboboxValue>
         <ComboboxChipsInput />
@@ -44,8 +47,8 @@ export function ProjectTechStackInput() {
         <ComboboxEmpty>No items found.</ComboboxEmpty>
         <ComboboxList>
           {(item) => (
-            <ComboboxItem key={item} value={item}>
-              {item}
+            <ComboboxItem key={item.value} value={item.value}>
+              {item.label}
             </ComboboxItem>
           )}
         </ComboboxList>
